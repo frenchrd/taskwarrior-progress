@@ -28,7 +28,9 @@ def count_tasks_by_project(task_list)
     project_count[project] = 0 unless project_count.has_key? project
     project_count[project] += 1
   end
-  project_count
+  project_count.each_pair do |k,v|
+    project_count[k] = v.to_f / task_list.length
+  end
 end
 
 def sort_projects_by_count(project_count)
@@ -48,7 +50,7 @@ def output_results(projects_by_count)
     max = item[0].length if max < item[0].length
   end
   projects_by_count.each do |item|
-    puts "#{item[0]}:" + item[2].call(max) + "#{item[1]}"
+    puts "#{item[0]}:" + item[2].call(max) + "#{(item[1] * 100).to_i}%"
   end
 end
 
