@@ -35,9 +35,20 @@ def sort_projects_by_count(project_count)
   (project_count.sort_by {|_key, value| value}).reverse
 end
 
+def spacer_factory(left_padding_length)
+  lambda {|max|
+    " " * (max - left_padding_length)
+  }
+end
+
 def output_results(projects_by_count)
+  max = 0
   projects_by_count.each do |item|
-    puts "#{item[0]}: #{item[1]}"
+    item << spacer_factory(item[0].length)
+    max = item[0].length if max < item[0].length
+  end
+  projects_by_count.each do |item|
+    puts "#{item[0]}:" + item[2].call(max) + "#{item[1]}"
   end
 end
 
