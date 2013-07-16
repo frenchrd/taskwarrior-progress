@@ -23,6 +23,8 @@ def count_tasks_by_project(task_list)
   project_count = {}
   task_list.each do |task|
     project = task['project']
+    project = "No Project" if project.nil?
+    project = project.split(".")[0]
     project_count[project] = 0 unless project_count.has_key? project
     project_count[project] += 1
   end
@@ -41,7 +43,7 @@ end
 
 today = DateTime.now
 three_weeks_ago = today - 21
-json_logs = taskwarrior_completed_within(three_weeks_ago, today)
+json_logs = taskwarrior_completed_within(three_weeks_ago, today + 1)
 task_list = parse_task_logs(json_logs)
 project_count = count_tasks_by_project(task_list)
 projects_by_count = sort_projects_by_count(project_count)
