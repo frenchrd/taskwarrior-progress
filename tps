@@ -1,17 +1,6 @@
 #!/usr/bin/env ruby
 # TaskWarrior Progress Status
-require 'date'
 require 'json'
-
-def taskwarrior_date(date)
-  "#{date.month}/#{date.day}/#{date.year}"
-end
-
-def taskwarrior_completed_within(date1,date2)
-  before = taskwarrior_date(date2)
-  after  = taskwarrior_date(date1)
-  `task export end.before:#{before} end.after:#{after} status:completed`
-end
 
 def parse_task_logs(json_logs)
   JSON.parse "[#{json_logs}]"
@@ -54,9 +43,7 @@ def output_results(projects_by_count)
   end
 end
 
-today = DateTime.now
-three_weeks_ago = today - 21
-json_logs = taskwarrior_completed_within(three_weeks_ago, today + 1)
+json_logs = `task export end.after:-3wk end.before:tomorrow`
 task_list = parse_task_logs(json_logs)
 project_count = count_tasks_by_project(task_list)
 projects_by_count = sort_projects_by_count(project_count)
